@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit(.claude/skills/paper-ingest/**)",
+      "Workflow",
+      "Read(/tmp/**)",
+      "Bash(pdftotext *)",
+      "Bash(pdfinfo *)",
+      "Bash(pdftoppm *)"
+    ]
+  }
+}

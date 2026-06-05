@@ -1,0 +1,39 @@
+# 忽略操作系统文件
+.DS_Store
+Thumbs.db
+
+# 忽略 Obsidian 工作区状态（个人）
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/plugins/
+
+# 忽略 Claude/Claudian 本地权限配置
+.claude/settings.json
+
+# 忽略原始资料（由用户自行放置）
+raw/articles/*
+raw/papers/*
+raw/books/*
+raw/media/*
+raw/assets/*
+
+# 忽略自动生成的 wiki 内容（由 ingest 产生）
+wiki/entities/*
+wiki/concepts/*
+wiki/topics/*
+wiki/sources/*
+
+# 但保留占位文件（保持目录结构）
+!raw/articles/.gitkeep
+!raw/papers/.gitkeep
+!raw/books/.gitkeep
+!raw/media/.gitkeep
+!raw/assets/.gitkeep
+!wiki/entities/.gitkeep
+!wiki/concepts/.gitkeep
+!wiki/topics/.gitkeep
+!wiki/sources/.gitkeep
+
+# 保留模板索引和操作日志
+!wiki/index.md
+!wiki/log.md
