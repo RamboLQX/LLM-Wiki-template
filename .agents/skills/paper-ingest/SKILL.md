@@ -651,7 +651,7 @@ pdftotext -layout "论文路径.pdf" "/tmp/paper_ingest_${slug}.txt"
 
 # 与 LLM Wiki 框架的关系
 
-本 skill 是 LLM Wiki 框架中"论文"类型来源的专用 Ingest 通道。它遵循 CLAUDE.md 中定义的所有 wiki 规范（页面格式、frontmatter、链接规范、lint 规则等），只是在"来源消化"环节使用了更深度的结构化分析。
+本 skill 是 LLM Wiki 框架中"论文"类型来源的专用 Ingest 通道。它遵循 AGENTS.md 中定义的所有 wiki 规范（页面格式、frontmatter、链接规范、lint 规则等），只是在"来源消化"环节使用了更深度的结构化分析。
 
 当用户同时使用本 skill 和通用 ingest 时（例如一篇论文 + 一篇博客），所有输出统一存储在 `wiki/` 下，共享同一套索引、日志和知识网络。
 
@@ -661,7 +661,7 @@ pdftotext -layout "论文路径.pdf" "/tmp/paper_ingest_${slug}.txt"
 
 - **V2 直读并行模式**：5 个 section agent 各自直接从论文原文读取并撰写，无串行 reader 瓶颈。Token 消耗上升（5 次全文读取 vs 1 次），但 wall-clock 显著缩短（预计减少 40-50%），因为不再等待前置 reader agent
 - **主会话始终轻量**：论文原文不进主会话，所有重活（读取、分析、写入）在 Workflow 内部完成。主会话只做调度和汇报，每篇仅收到 ~300 字摘要
-- Skill 只处理论文 PDF。对于非论文内容（文章、博客、书籍笔记），使用 CLAUDE.md 中定义的通用 Ingest 工作流
+- Skill 只处理论文 PDF。对于非论文内容（文章、博客、书籍笔记），使用 AGENTS.md 中定义的通用 Ingest 工作流
 - **PDF 文本提取**：使用 `pdftotext -layout` 而非 Read 工具（后者会以图片形式加载，消耗大量上下文）
 - 如果论文过长导致文本文件 >200KB，在 `pdftotext` 后用 `head` 截断（保留引言到结论部分，去掉参考文献列表的冗余行）
 - 如果 Workflow 工具不可用，退回串行模式（先 5 次独立 section agent 调用、再 Section 6 合成、再串行写入）。串行模式下论文原文会进入主会话，仅适合单篇处理

@@ -1,8 +1,8 @@
 # LLM Wiki Template
 
-面向 **Obsidian + Claudian** 的 AI 知识库模板。
+面向 **Obsidian + Claudian / Claude Code / Codex** 的 AI 知识库模板。
 
-它不是一个把资料存起来再检索的 RAG 项目，而是一个让 AI agent 持续维护 Obsidian 知识网络的工作区：用户把原始资料放进 `raw/`，Claudian 中的 Claude Code / Codex 等 agent 按照 `CLAUDE.md` 的规则，把资料编译成结构化、可交叉引用、可持续更新的 `wiki/` 页面。
+它不是一个把资料存起来再检索的 RAG 项目，而是一个让 AI agent 持续维护 Obsidian 知识网络的工作区：用户把原始资料放进 `raw/`，Claudian 中的 Claude Code / Codex 等 agent 按照 `CLAUDE.md` 或 `AGENTS.md` 的规则，把资料编译成结构化、可交叉引用、可持续更新的 `wiki/` 页面。
 
 ## 适合谁
 
@@ -21,13 +21,18 @@
 
 ```text
 .
-├── CLAUDE.md                         # LLM Wiki 运维规范，也是 agent 的主要指令
+├── CLAUDE.md                         # Claude/Claudian 使用的 LLM Wiki 运维规范
+├── AGENTS.md                         # Codex 使用的 LLM Wiki 运维规范
 ├── README.md                         # 给用户看的使用说明
 ├── .claude/
 │   ├── settings.example.json          # Claude/Claudian 权限配置示例
 │   └── skills/
 │       └── paper-ingest/
 │           └── SKILL.md               # 论文深度 ingest skill
+├── .agents/
+│   └── skills/
+│       └── paper-ingest/
+│           └── SKILL.md               # Codex 版论文深度 ingest skill
 ├── raw/                               # 原始资料，只读
 │   ├── articles/
 │   ├── papers/
@@ -72,7 +77,7 @@ Claudian 项目：
 - Obsidian 插件页：https://community.obsidian.md/plugins/realclaudian
 - GitHub：https://github.com/YishenTu/claudian
 
-### 4. 配置 Claude/Claudian 权限
+### 4. 配置 Agent 权限
 
 本模板默认不提交 `.claude/settings.json`，因为它属于本地权限配置。
 
@@ -83,6 +88,8 @@ cp .claude/settings.example.json .claude/settings.json
 ```
 
 然后根据自己的信任边界调整权限。
+
+如果你使用 Codex，请让 Codex 在项目根目录读取 `AGENTS.md`；论文 ingest skill 位于 `.agents/skills/paper-ingest/SKILL.md`。
 
 ### 5. 放入原始资料
 
@@ -108,7 +115,7 @@ raw/assets/      # 图片和附件
 处理 raw/articles/xxx.md
 ```
 
-Agent 会按照 `CLAUDE.md` 的通用 ingest 流程：
+Agent 会按照 `CLAUDE.md` 或 `AGENTS.md` 的通用 ingest 流程：
 
 - 创建或更新 `wiki/sources/` 下的来源摘要
 - 提取相关实体到 `wiki/entities/`
@@ -129,7 +136,10 @@ Agent 会按照 `CLAUDE.md` 的通用 ingest 流程：
 使用 paper-ingest 处理 raw/papers/xxx.pdf
 ```
 
-论文会走 `.claude/skills/paper-ingest/SKILL.md` 定义的深度流程，生成 6 节论文报告：
+论文会走 paper-ingest skill 定义的深度流程，生成 6 节论文报告：
+
+- Claude/Claudian：`.claude/skills/paper-ingest/SKILL.md`
+- Codex：`.agents/skills/paper-ingest/SKILL.md`
 
 1. 研究问题与动机
 2. 核心方法
@@ -212,7 +222,7 @@ git push -u origin main
 
 ### 这和普通 Obsidian 模板有什么区别？
 
-普通模板主要规定页面格式；这个项目还规定了 AI agent 的运维流程。`CLAUDE.md` 告诉 agent 如何摄入资料、如何维护索引、如何处理矛盾、如何做健康检查。
+普通模板主要规定页面格式；这个项目还规定了 AI agent 的运维流程。`CLAUDE.md` 和 `AGENTS.md` 告诉 agent 如何摄入资料、如何维护索引、如何处理矛盾、如何做健康检查。
 
 ### 这和 RAG 有什么区别？
 
