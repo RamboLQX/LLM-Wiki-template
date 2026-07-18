@@ -1,6 +1,10 @@
 # 已有 LLM Wiki 更新指南
 
+项目仓库：[https://github.com/RamboLQX/LLM-Wiki-template](https://github.com/RamboLQX/LLM-Wiki-template)
+
 本指南用于把模板中的框架规则、页面模板、paper-ingest skill 和仪表盘合并到已经投入使用的 Vault。更新必须采用比较与合并方式，不能直接覆盖整个目录。
+
+如果用户只向 Agent 提供项目链接，Agent 应先访问该仓库并读取 `README.md`、`UPGRADE.md`、`AGENTS.md` 和 `CLAUDE.md`，再定位需要比较的框架文件。需要下载或克隆时使用独立临时目录，不要把仓库直接克隆到现有 Vault 中。
 
 ## 框架变化
 
@@ -34,8 +38,11 @@
 现有 Vault：
 <填写用户现有 Wiki 的绝对路径>
 
-新版模板：
-<填写新版 LLM-Wiki-template 的绝对路径>
+模板项目：
+https://github.com/RamboLQX/LLM-Wiki-template
+
+新版模板本地路径（如已下载，可留空）：
+<填写 LLM-Wiki-template 的绝对路径>
 
 目标：
 将新版模板中的 Agent 规则、页面模板、paper-ingest skill 和 Bases 仪表盘合并到现有 Vault，同时完整保留用户已经摄入和整理的知识内容。
@@ -43,9 +50,10 @@
 必须遵守以下规则：
 
 1. 第一阶段只读检查，不立即修改。
-2. 先读取新版模板中的 UPGRADE.md、AGENTS.md、CLAUDE.md、README.md。
-3. 检查 obsidian-markdown、obsidian-bases、obsidian-cli、json-canvas 是否可被当前 Agent 发现。缺失时先说明安装方法和受影响步骤，不要静默模拟技能行为。
-4. 比较以下框架文件：
+2. 如果没有提供新版模板本地路径，先访问模板项目链接并定位仓库内容；需要下载或克隆时使用独立临时目录，不得覆盖或嵌套进现有 Vault。
+3. 读取新版模板中的 UPGRADE.md、AGENTS.md、CLAUDE.md、README.md。
+4. 检查 obsidian-markdown、obsidian-bases、obsidian-cli、json-canvas 是否可被当前 Agent 发现。缺失时先说明安装方法和受影响步骤，不要静默模拟技能行为。
+5. 比较以下框架文件：
    - AGENTS.md
    - CLAUDE.md
    - templates/
@@ -54,7 +62,7 @@
    - wiki/meta/论文处理约定.md
    - wiki/meta/dashboard.base
    - wiki/meta/reading-list.base
-5. 严禁删除、覆盖、移动或批量改写：
+6. 严禁删除、覆盖、移动或批量改写：
    - raw/**
    - wiki/entities/**
    - wiki/concepts/**
@@ -63,28 +71,28 @@
    - wiki/index.md
    - wiki/log.md
    - 用户自建的项目、笔记、模板和 meta 页面
-6. 不复制新版模板或现有 Vault 中的本地状态：
+7. 不复制新版模板或现有 Vault 中的本地状态：
    - .claudian/**
    - .obsidian/workspace*.json
    - .obsidian/plugins/**
    - .claude/settings.json
    - 会话、缓存、锁文件和密钥
-7. AGENTS.md、CLAUDE.md 和用户自定义模板必须采用合并方式：
+8. AGENTS.md、CLAUDE.md 和用户自定义模板必须采用合并方式：
    - 保留用户已有的自定义规则；
    - 加入新版缺失章节；
    - 如果存在冲突，列出冲突并等待用户决定，不得直接覆盖。
-8. paper-ingest 属于框架维护目录，可以在用户确认后升级：
+9. paper-ingest 属于框架维护目录，可以在用户确认后升级：
    - .claude/skills/paper-ingest/ 作为唯一完整实现；
    - .agents/skills/paper-ingest/SKILL.md 作为兼容入口；
    - 不保留两份彼此独立的实现。
-9. 如果现有 Vault 是 Git 仓库，修改前检查 git status；工作区存在未提交修改时不得覆盖相关文件。
-10. 修改前先输出：
+10. 如果现有 Vault 是 Git 仓库，修改前检查 git status；工作区存在未提交修改时不得覆盖相关文件。
+11. 修改前先输出：
    - 模板带来的功能变化；
    - 将新增、修改、保留的文件；
    - 发现的用户自定义内容；
    - 潜在冲突；
    - 验证方案。
-11. 等待用户明确确认后再执行修改。
+12. 等待用户明确确认后再执行修改。
 
 完成修改后验证：
 
