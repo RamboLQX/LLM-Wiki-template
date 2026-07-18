@@ -1,0 +1,34 @@
+filters:
+  and:
+    - /^wiki\/sources\//.matches(file.path)
+    - file.ext == "md"
+formulas:
+  days_ago: (now() - file.ctime).days
+  source_type: if(file.hasTag("paper"), "📄 论文", if(file.hasTag("article"), "📰 文章", "📚 其他"))
+properties:
+  formula.source_type:
+    displayName: 类型
+  formula.days_ago:
+    displayName: 摄入天数
+  created:
+    displayName: 摄入日期
+views:
+  - type: table
+    name: 全部来源
+    groupBy:
+      property: file.folder
+      direction: ASC
+    order:
+      - formula.source_type
+      - file.name
+      - formula.days_ago
+      - created
+    columnSize:
+      file.name: 420
+  - type: cards
+    name: 最近摄入
+    order:
+      - file.name
+      - formula.source_type
+      - formula.days_ago
+    limit: 20

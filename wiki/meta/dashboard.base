@@ -1,0 +1,49 @@
+filters:
+  and:
+    - /^wiki\//.matches(file.path)
+    - file.ext == "md"
+formulas:
+  days_since_updated: (now() - file.mtime).days
+  status_icon: if(status == "evergreen", "🌲", if(status == "stub", "🌱", if(status == "draft", "📝", if(status == "archived", "📦", "❓"))))
+  page_type: file.folder
+properties:
+  status:
+    displayName: 状态
+  tags:
+    displayName: 标签
+  formula.days_since_updated:
+    displayName: 距更新(天)
+  created:
+    displayName: 创建日期
+views:
+  - type: table
+    name: 全部页面
+    groupBy:
+      property: formula.page_type
+      direction: ASC
+    order:
+      - formula.status_icon
+      - file.name
+      - status
+      - tags
+      - formula.days_since_updated
+      - created
+  - type: table
+    name: 需关注的页面
+    filters:
+      or:
+        - status == "stub"
+        - status == "draft"
+    order:
+      - status
+      - file.name
+      - formula.days_since_updated
+  - type: table
+    name: 近期未更新
+    filters:
+      and:
+        - formula.days_since_updated > 180
+        - status != "archived"
+    order:
+      - formula.days_since_updated
+      - file.name

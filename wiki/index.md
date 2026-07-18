@@ -29,3 +29,6 @@ status: evergreen
 
 - [[wiki/meta/术语表|术语表]] — 跨来源的关键术语统一定义
 - [[wiki/meta/阅读清单|阅读清单]] — 计划阅读或正在阅读的来源
+- [[wiki/meta/论文处理约定|论文处理约定]] — 论文摄入的质量、证据和写入规则
+- [[wiki/meta/dashboard.base|Wiki 状态仪表盘]] — 全 Wiki 页面状态面板
+- [[wiki/meta/reading-list.base|来源阅读清单]] — 来源摄入情况动态面板

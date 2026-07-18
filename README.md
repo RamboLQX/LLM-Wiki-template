@@ -24,15 +24,18 @@
 ├── CLAUDE.md                         # Claude/Claudian 使用的 LLM Wiki 运维规范
 ├── AGENTS.md                         # Codex 使用的 LLM Wiki 运维规范
 ├── README.md                         # 给用户看的使用说明
+├── UPGRADE.md                        # 已有 Vault 的安全更新指南
 ├── .claude/
 │   ├── settings.example.json          # Claude/Claudian 权限配置示例
 │   └── skills/
 │       └── paper-ingest/
-│           └── SKILL.md               # 论文深度 ingest skill
+│           ├── SKILL.md               # 论文 ingest 主流程
+│           ├── references/            # 按需加载的 Agent 契约和批量规则
+│           └── scripts/               # PDF 预检与幂等检查
 ├── .agents/
 │   └── skills/
 │       └── paper-ingest/
-│           └── SKILL.md               # Codex 版论文深度 ingest skill
+│           └── SKILL.md               # Codex 兼容入口
 ├── raw/                               # 原始资料，只读
 │   ├── articles/
 │   ├── papers/
@@ -45,7 +48,7 @@
     ├── concepts/
     ├── topics/
     ├── sources/
-    ├── meta/
+    ├── meta/                           # 约定、术语表和 Bases 仪表盘
     ├── index.md
     └── log.md
 ```
@@ -77,7 +80,33 @@ Claudian 项目：
 - Obsidian 插件页：https://community.obsidian.md/plugins/realclaudian
 - GitHub：https://github.com/YishenTu/claudian
 
-### 4. 配置 Agent 权限
+### 4. 配置 Obsidian Skills
+
+本框架使用 [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) 中的以下技能：
+
+- `obsidian-markdown`：编辑 Obsidian Markdown、属性和 wiki-link
+- `obsidian-bases`：维护 `.base` 仪表盘
+- `obsidian-cli`：执行检索和 Wiki 健康检查
+- `json-canvas`：按需生成知识地图
+
+推荐使用官方支持的安装方式之一：
+
+```text
+/plugin marketplace add kepano/obsidian-skills
+/plugin install obsidian@obsidian-skills
+```
+
+或：
+
+```bash
+npx skills add https://github.com/kepano/obsidian-skills
+```
+
+手动安装时，Claude Code 将仓库内容放入 Vault 根目录的 `.claude/`；Codex 将 `skills/` 中的技能复制到 `~/.codex/skills/`。完成后重启 Agent，并确认上述四个技能可被发现。完整说明以 [obsidian-skills 官方 README](https://github.com/kepano/obsidian-skills) 为准。
+
+在 Obsidian 的 Core plugins 中同时启用 **Bases** 和 **Canvas**。使用 `obsidian-cli` 前还需确认 Obsidian CLI 可在本机运行。
+
+### 5. 配置 Agent 权限
 
 本模板默认不提交 `.claude/settings.json`，因为它属于本地权限配置。
 
@@ -89,9 +118,9 @@ cp .claude/settings.example.json .claude/settings.json
 
 然后根据自己的信任边界调整权限。
 
-如果你使用 Codex，请让 Codex 在项目根目录读取 `AGENTS.md`；论文 ingest skill 位于 `.agents/skills/paper-ingest/SKILL.md`。
+如果你使用 Codex，请让 Codex 在项目根目录读取 `AGENTS.md`。`.agents/skills/paper-ingest/SKILL.md` 是兼容入口，实际流程和资源统一放在 `.claude/skills/paper-ingest/`，避免维护两份不同实现。
 
-### 5. 放入原始资料
+### 6. 放入原始资料
 
 把资料放入对应目录：
 
@@ -136,10 +165,10 @@ Agent 会按照 `CLAUDE.md` 或 `AGENTS.md` 的通用 ingest 流程：
 使用 paper-ingest 处理 raw/papers/xxx.pdf
 ```
 
-论文会走 paper-ingest skill 定义的深度流程，生成 6 节论文报告：
+论文会先执行 PDF 可读性与来源指纹检查，再由 paper-ingest skill 生成六节报告并更新知识网络：
 
-- Claude/Claudian：`.claude/skills/paper-ingest/SKILL.md`
-- Codex：`.agents/skills/paper-ingest/SKILL.md`
+- 主实现：`.claude/skills/paper-ingest/`
+- Codex 兼容入口：`.agents/skills/paper-ingest/SKILL.md`
 
 1. 研究问题与动机
 2. 核心方法
@@ -178,7 +207,7 @@ lint
 
 ## Paper Ingest 依赖
 
-论文 PDF 解析依赖 `pdftotext`。macOS 用户通常可以通过 poppler 安装：
+论文 PDF 预检依赖 Poppler 提供的 `pdfinfo`、`pdftotext` 和 `pdftoppm`。macOS 用户可以安装：
 
 ```bash
 brew install poppler
@@ -186,21 +215,27 @@ brew install poppler
 
 为了安全，模板没有默认允许 agent 执行 `brew install`。请你自己在终端安装依赖，再让 agent 运行论文 ingest。
 
+## 升级已有 Wiki
+
+不要把模板仓库直接覆盖到已经使用的 Vault。请按照 [UPGRADE.md](UPGRADE.md) 让 Agent 先比较框架文件，再合并规则、模板和 skill。
+
+升级过程中必须保留 `raw/`、已有 `wiki/` 内容、`wiki/index.md`、`wiki/log.md`、用户自建笔记和本地配置。模板只负责提供框架更新，不替换用户已经形成的知识库。
+
 ## Git 建议
 
 本模板默认：
 
-- 提交框架、模板、skill 和空目录占位文件
+- 提交框架、模板、skill 和通用 meta 页面
 - 不提交用户放入 `raw/` 的原始资料
 - 不提交 ingest 后生成的大量 wiki 内容
 - 保留 `wiki/index.md` 和 `wiki/log.md` 作为初始模板
-- 不提交 `.claude/settings.json` 这类本地权限配置
+- 不提交 `.claude/settings.json`、`.claudian/` 会话和 Obsidian 工作区状态
 
 如果你希望把自己的 wiki 内容也同步到私有仓库，可以按需要调整 `.gitignore`。
 
 ## 发布到 GitHub
 
-如果你要把自己的版本发布成模板仓库：
+如果你要把自己的 Wiki 发布成模板仓库：
 
 1. 确认没有提交私人资料、论文 PDF、个人笔记或本地权限配置
 2. 初始化 Git 仓库并提交

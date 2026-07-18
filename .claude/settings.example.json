@@ -1,11 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Edit(.claude/skills/paper-ingest/**)",
       "Workflow",
       "Read(/tmp/**)",
-      "Bash(pdftotext *)",
-      "Bash(pdfinfo *)",
+      "Bash(bash .claude/skills/paper-ingest/scripts/prepare_pdf.sh *)",
+      "Bash(bash .claude/skills/paper-ingest/scripts/check_ingest_state.sh *)",
       "Bash(pdftoppm *)"
     ]
   }

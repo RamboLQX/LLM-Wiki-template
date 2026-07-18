@@ -9,6 +9,9 @@ Thumbs.db
 
 # 忽略 Claude/Claudian 本地权限配置
 .claude/settings.json
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+.claudian/
 
 # 忽略原始资料（由用户自行放置）
 raw/articles/*
